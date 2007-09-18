@@ -45,4 +45,4 @@ sub module_boilerplate_ok {
     );
 }
 
-module_boilerplate_ok('lib\WWW\Scraper\ISBN\AmazonDE_Driver.pm');
+module_boilerplate_ok('lib/WWW/Scraper/ISBN/AmazonDE_Driver.pm');

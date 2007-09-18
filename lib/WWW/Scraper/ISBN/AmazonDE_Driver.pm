@@ -5,6 +5,7 @@ use strict;
 
 use base qw(WWW::Scraper::ISBN::Driver);
 use WWW::Mechanize;
+use Web::Scraper;
 
 use constant    AMAZON => 'http://www.amazon.de/';
 use constant    SEARCH => 'http://www.amazon.de/';
@@ -12,16 +13,15 @@ use constant    SEARCH => 'http://www.amazon.de/';
 
 =head1 NAME
 
-WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online
-catalog.
+WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online catalog.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -56,53 +56,36 @@ sub search {
 
     my $keyword ='search-alias=stripbooks';
     $mechanize->set_fields( 
-                'field-keywords' => $isbn, 
-                'url'            => $keyword 
-                );
+        'field-keywords' => $isbn, 
+        'url'            => $keyword 
+    );
     $mechanize->submit();
 
     return    $self->handler('Error about form submission (form changed?)') 
         unless($mechanize->success());
 
-    my $content=$mechanize->content();
-    my ($con,$thumb, $image, $pub);
+    my $content = $mechanize->content();
+    
+    my $scraper = scraper {
+        process "title"                    , title       => 'TEXT';
+        process 'meta[name="description"]' , content     => '@content';
+        process 'script'                   , 'scripts[]' => sub { 
+                my $script = join '', @{$_->content_array_ref};
+                $script =~ /registerImage\("original_image"/ ? $script : ();
+            }
+    };
+    
+    my $sresult = $scraper->scrape( $content );
+    
+    my ($thumb,$image) = $sresult->{scripts}->[0] =~ /original_image","([^"]+)"\s*,\s*"<a \s href="\+'"'\+"([^"]*)"/;
+    my ($pub) = $content =~ m{<li><b>Verlag:</b>\s*(.*?)</li>}msx;
 
-    if(
-       $content =~ s{
-           .*
-       <meta \s  name="description"  \s content=" ( [^"]* ) "     .*
-           <div  \s class="buying">                                   .*
-           <script \s language=                                       .*
-           function \s registerImage 
-                         }{}msx
-           )
-    {$con=$1;}
-
-    if($content =~ s{
-
-     <script>                                            .*
-     registerImage\("original_image",
-           \s " ( [^"]* )  ",
-
-                          }{}msx )
-    {$thumb=$1;}
-
-    if($content =~ m{
-     <li><b>Verlag:</b>\s*(.*?)</li>
-                }msx)
-    {$pub=$1;}
-
-    if($content =~ s{
-                \s "<a \s href="\+'"'\+" ( [^"]* ) "\+          .*
-                <b \s class="h1">Produktbeschreibungen</b><br\s /> 
-    }{}msx )
-    {$image=$1};
-
-    my $data = {};
-    $data->{content}    = $con;
-    $data->{thumb_link} = $thumb;
-    $data->{image_link} = $image;
-    $data->{published}  = $pub;
+    my $data = {
+        content    => $sresult->{content},
+        thumb_link => $thumb,
+        image_link => $image,
+        published  => $pub,
+    };
 
     return $self->handler("Could not extract data from amazon.de result page.")
         unless(defined $data);
@@ -118,7 +101,7 @@ sub search {
         ($data->{content} =~ 
                   /Amazon.de\s*:\s*
                   (.*)
-                  :\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher).*
+                  :\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
                   by\s+(.*)/x);
 
 
@@ -135,6 +118,7 @@ sub search {
         'pubdate'     => $data->{pubdate},
         'book_link'   => $mechanize->uri()
     };
+    
     $self->book($bk);
     $self->found(1);
     return $self->book;

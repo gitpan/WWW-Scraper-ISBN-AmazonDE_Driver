@@ -19,4 +19,4 @@ my $book = $record->book;
 is( $book->{title}, 'Mastering Perl (Mastering)' );
 is( $book->{author}, 'Brian D. Foy' );
 is( $book->{publisher}, 'O\'Reilly Media' );
-is( $book->{pubdate}, 'Juli 2007' );
+like( $book->{pubdate}, qr/Juli 2007/ );

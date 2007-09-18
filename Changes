@@ -3,3 +3,7 @@ Revision history for WWW::Scraper::ISBN::AmazonDE_Driver
 0.01    Sun 12 Aug 2007
         First version, released on an unsuspecting world.
 
+0.02    Tue 18 Sep 2007
+        + Replaced RegEx by Web::Scraper
+        + added some prereqs to Build.PL
+        - bugfix: handle some more titles

@@ -3,6 +3,7 @@ package WWW::Scraper::ISBN::AmazonDE_Driver;
 use warnings;
 use strict;
 
+use WWW::Scraper::ISBN::Driver;
 use base qw(WWW::Scraper::ISBN::Driver);
 use WWW::Mechanize;
 use Web::Scraper;
@@ -21,7 +22,7 @@ Version 0.02
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 
@@ -99,11 +100,13 @@ sub search {
 
     ($data->{title},$data->{author}) = 
         ($data->{content} =~ 
-                  /Amazon.de\s*:\s*
-                  (.*)
-                  :\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
-                  by\s+(.*)/x);
-
+                  /
+                  Amazon.de\s*:\s*
+                  (.*?)
+                  \s*:\s*([^:]+)\s*:
+                  /x);
+                  #\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
+    #$data->{title} =~ s!\(.*?\)$!!;
 
     ($data->{publisher},$data->{pubdate}) = 
         ($data->{published} =~ /\s*(.*?)(?:;.*?)?\s+\(([^)]*)/);

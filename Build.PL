@@ -11,6 +11,8 @@ my $builder = Module::Build->new(
         'Test::More'                 => 0,
         'WWW::Mechanize'             => 1.20,
         'Web::Scraper'               => 0.13,
+        'WWW::Scraper::ISBN::Driver' => 0.17,
+        'WWW::Scraper::ISBN'         => 0.24,
     },
     requires => {
         'WWW::Scraper::ISBN::Driver' => 0.17,

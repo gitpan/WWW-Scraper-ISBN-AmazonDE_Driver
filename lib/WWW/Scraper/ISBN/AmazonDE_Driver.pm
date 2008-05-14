@@ -22,7 +22,7 @@ Version 0.02
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 SYNOPSIS
 
@@ -98,15 +98,18 @@ sub search {
         $data->{$_} =~ s/\s+$//;
     }
 
-    ($data->{title},$data->{author}) = 
-        ($data->{content} =~ 
-                  /
-                  Amazon.de\s*:\s*
-                  (.*?)
-                  \s*:\s*([^:]+)\s*:
-                  /x);
-                  #\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
-    #$data->{title} =~ s!\(.*?\)$!!;
+#    ($data->{title},$data->{author}) = 
+#        ($data->{content} =~ 
+#                  /
+#                  Amazon.de\s*:\s*
+#                  (.+?)
+#                  \s*:\s*([^:]+)\s*:
+#                  /x);
+#                  #\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
+#    #$data->{title} =~ s!\(.*?\)$!!;
+
+     my @tmp_info = split /:/, $data->{content};
+     @{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[1,-2];
 
     ($data->{publisher},$data->{pubdate}) = 
         ($data->{published} =~ /\s*(.*?)(?:;.*?)?\s+\(([^)]*)/);

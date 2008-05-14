@@ -16,7 +16,7 @@ my $record = $scraper->search( $isbn );
 ok( $record->found );
 my $book = $record->book;
 
-is( $book->{title}, 'Die Welle. Bericht über einen Unterrichtsversuch, der zu weit ging.' );
-is( $book->{author}, 'Morton Rhue' );
+is( $book->{title}, 'Die Welle' );
+is( $book->{author}, 'Morton Rhue, Hans-Georg Noack' );
 is( $book->{publisher}, 'Ravensburger Buchverlag' );
 is( $book->{pubdate}, 'März 1997' );

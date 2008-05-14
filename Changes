@@ -7,3 +7,7 @@ Revision history for WWW::Scraper::ISBN::AmazonDE_Driver
         + Replaced RegEx by Web::Scraper
         + added some prereqs to Build.PL
         - bugfix: handle some more titles
+
+0.04    Tue 13 May 2008
+        + some changes due to changes on Amazon.de
+

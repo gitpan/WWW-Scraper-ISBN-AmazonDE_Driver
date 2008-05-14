@@ -11,3 +11,6 @@ Revision history for WWW::Scraper::ISBN::AmazonDE_Driver
 0.04    Tue 13 May 2008
         + some changes due to changes on Amazon.de
 
+0.041   Wed 14 May 2008
+        + new upload due to changes on an internal tool
+

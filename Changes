@@ -14,3 +14,6 @@ Revision history for WWW::Scraper::ISBN::AmazonDE_Driver
 0.041   Wed 14 May 2008
         + new upload due to changes on an internal tool
 
+0.042   Thu 28 Aug 2008
+        + changed publish date of 'Die Welle' due to a new edition
+

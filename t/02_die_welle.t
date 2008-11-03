@@ -19,4 +19,4 @@ my $book = $record->book;
 is( $book->{title}, 'Die Welle' );
 is( $book->{author}, 'Morton Rhue, Hans-Georg Noack' );
 is( $book->{publisher}, 'Ravensburger Buchverlag' );
-is( $book->{pubdate}, 'März 1997' );
+is( $book->{pubdate}, 'Mai 2008' );

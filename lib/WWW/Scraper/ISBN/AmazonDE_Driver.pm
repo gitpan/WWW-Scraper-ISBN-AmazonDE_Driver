@@ -11,6 +11,7 @@ use Web::Scraper;
 use constant    AMAZON => 'http://www.amazon.de/';
 use constant    SEARCH => 'http://www.amazon.de/';
 
+our $DEBUG = $ENV{ISBN_DRIVER_DEBUG};
 
 =head1 NAME
 
@@ -18,11 +19,11 @@ WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online c
 
 =head1 VERSION
 
-Version 0.02
+Version 0.043
 
 =cut
 
-our $VERSION = '0.042';
+our $VERSION = '0.043';
 
 =head1 SYNOPSIS
 
@@ -67,13 +68,15 @@ sub search {
 
     my $content = $mechanize->content();
     
+    #$DEBUG and warn $content;
+    
     my $scraper = scraper {
         process "title"                    , title       => 'TEXT';
-        process 'meta[name="description"]' , content     => '@content';
+        process "meta[name='description']" , content     => '@content';
         process 'script'                   , 'scripts[]' => sub { 
                 my $script = join '', @{$_->content_array_ref};
                 $script =~ /registerImage\("original_image"/ ? $script : ();
-            }
+            };
     };
     
     my $sresult = $scraper->scrape( $content );
@@ -86,6 +89,7 @@ sub search {
         thumb_link => $thumb,
         image_link => $image,
         published  => $pub,
+        title      => $sresult->{title},
     };
 
     return $self->handler("Could not extract data from amazon.de result page.")
@@ -108,8 +112,10 @@ sub search {
 #                  #\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
 #    #$data->{title} =~ s!\(.*?\)$!!;
 
+     #my @tmp_info = split /:/, $data->{content};
+     #@{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[1,-2];
      my @tmp_info = split /:/, $data->{content};
-     @{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[1,-2];
+     @{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[0,-3];
 
     ($data->{publisher},$data->{pubdate}) = 
         ($data->{published} =~ /\s*(.*?)(?:;.*?)?\s+\(([^)]*)/);

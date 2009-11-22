@@ -16,7 +16,10 @@ my $record = $scraper->search( $isbn );
 ok( $record->found );
 my $book = $record->book;
 
-is( $book->{title}, 'Mastering Perl (Mastering)' );
+my @months = qw(Januar Februar März April Mai Juni Juli August September Oktober November Dezember);
+my $regex = join '|', @months;
+
+is( $book->{title}, 'Mastering Perl' );
 is( $book->{author}, 'Brian D. Foy' );
 is( $book->{publisher}, 'O\'Reilly Media' );
-like( $book->{pubdate}, qr/Juli 2007/ );
+like( $book->{pubdate}, qr/(?:$regex) 20\d\d/ );

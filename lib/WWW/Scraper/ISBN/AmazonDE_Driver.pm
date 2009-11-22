@@ -19,11 +19,11 @@ WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online c
 
 =head1 VERSION
 
-Version 0.043
+Version 0.044
 
 =cut
 
-our $VERSION = '0.043';
+our $VERSION = '0.044';
 
 =head1 SYNOPSIS
 
@@ -112,10 +112,10 @@ sub search {
 #                  #\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
 #    #$data->{title} =~ s!\(.*?\)$!!;
 
-     #my @tmp_info = split /:/, $data->{content};
-     #@{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[1,-2];
      my @tmp_info = split /:/, $data->{content};
-     @{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[0,-3];
+     @{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[0,-2];
+     #my @tmp_info = split /:/, $data->{content};
+     #@{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[0,-3];
 
     ($data->{publisher},$data->{pubdate}) = 
         ($data->{published} =~ /\s*(.*?)(?:;.*?)?\s+\(([^)]*)/);
@@ -183,7 +183,7 @@ L<http://search.cpan.org/dist/WWW::Scraper::ISBN::AmazonDE_Driver>
 Copyright 2007 Renee Baecker, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+under the terms of Artistic License 2.0.
 
 =cut
 

@@ -1,20 +1,56 @@
-use 5.006001;
-use ExtUtils::MakeMaker;
 
-WriteMakefile(
-    NAME              => 'WWW::Scraper::ISBN::AmazonDE_Driver',
-    VERSION_FROM      => 'lib/WWW/Scraper/ISBN/AmazonDE_Driver.pm', # finds $VERSION
-    PREREQ_PM         => {
-        'Test::More'                 => 0,
-        'WWW::Mechanize'             => 1.20,
-        'Web::Scraper'               => 0.13,
-        'WWW::Scraper::ISBN::Driver' => 0.17,
-        'WWW::Scraper::ISBN'         => 0.24,
-        'Test::CheckManifest'        => 1.22,
-    }, # e.g., Module::Name => 1.1
-    ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/WWW/Scraper/ISBN/AmazonDE_Driver.pm', # retrieve abstract from module
-       AUTHOR         => 'Renee Baecker <module@renee-baecker.de>') : ()),
-    ($ExtUtils::MakeMaker::VERSION >= 6.31 ?
-      (LICENSE        => 'artistic_2') : ()),
+use strict;
+use warnings;
+
+
+
+use ExtUtils::MakeMaker 6.30;
+
+
+
+my %WriteMakefileArgs = (
+  "ABSTRACT" => "Search driver for the (DE) Amazon online catalog.\r",
+  "AUTHOR" => "Renee Baecker <module\@renee-baecker.de>",
+  "BUILD_REQUIRES" => {},
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30"
+  },
+  "DISTNAME" => "WWW-Scraper-ISBN-AmazonDE_Driver",
+  "EXE_FILES" => [],
+  "LICENSE" => "artistic_2",
+  "NAME" => "WWW::Scraper::ISBN::AmazonDE_Driver",
+  "PREREQ_PM" => {
+    "Test::CheckManifest" => "1.22",
+    "Test::More" => 0,
+    "WWW::Mechanize" => "1.20",
+    "WWW::Scraper::ISBN" => "0.24",
+    "WWW::Scraper::ISBN::Driver" => "0.17",
+    "Web::Scraper" => "0.13"
+  },
+  "VERSION" => "0.22",
+  "test" => {
+    "TESTS" => "t/*.t"
+  }
 );
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
+

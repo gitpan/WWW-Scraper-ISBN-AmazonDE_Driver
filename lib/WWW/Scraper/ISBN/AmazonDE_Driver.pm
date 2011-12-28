@@ -14,32 +14,11 @@ use constant    DIRECT => 'http://www.amazon.de/gp/product/';
 
 our $DEBUG = $ENV{ISBN_DRIVER_DEBUG};
 
-=head1 NAME
+# ABSTRACT: Search driver for the (DE) Amazon online catalog.
 
-WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online catalog.
 
-=head1 VERSION
+our $VERSION = '0.22';
 
-Version 0.21
-
-=cut
-
-our $VERSION = '0.21';
-
-=head1 SYNOPSIS
-
-See parent class documentation (L<WWW::Scraper::ISBN::Driver>)
-
-=head1 DESCRIPTION
-
-Searches for book information from the (DE) Amazon online catalog.
-This module is a mere paste and translation of L<WWW::Scraper::ISBN::AmazonFR_Driver>.
-
-=head1 FUNCTIONS
-
-=head2 search
-
-=cut
 
 sub search {
     my ($self,$isbn) = @_;
@@ -82,7 +61,7 @@ sub search {
     
     my $scraper = scraper {
         process "title"                    , title       => 'TEXT';
-        process "meta[name='description']" , content     => '@content';
+        process "meta[name=\"description\"]" , content     => '@content';
         process 'script'                   , 'scripts[]' => sub { 
                 my $script = join '', @{$_->content_array_ref};
                 $script =~ /registerImage\("original_image"/ ? $script : ();
@@ -122,8 +101,13 @@ sub search {
 #                  #\s*(?:(?:English\sBooks?)|Bücher|B&amp;uuml;cher|B&uuml;cher).*
 #    #$data->{title} =~ s!\(.*?\)$!!;
 
-     my @tmp_info = split /:/, $data->{content};
-     @{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[0,-2];
+     my @tmp_info = map{ s{\A\s*}{}; $_ }split /:/, $data->{content};
+     @{ $data }{ qw/title author/ } = @tmp_info[0,-2];
+
+     if ( $data->{author} =~ /\A\d+/ ) {
+         $data->{author} = $tmp_info[1];
+     }
+
      #my @tmp_info = split /:/, $data->{content};
      #@{ $data }{ qw/title author/ } = map{ s/^\s*//; $_ }@tmp_info[0,-3];
 
@@ -145,6 +129,37 @@ sub search {
     $self->found(1);
     return $self->book;
 }
+
+
+1; # End of WWW::Scraper::ISBN::AmazonDE_Driver
+
+__END__
+=pod
+
+=head1 NAME
+
+WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online catalog.
+
+=head1 VERSION
+
+version 0.22
+
+=head1 SYNOPSIS
+
+See parent class documentation (L<WWW::Scraper::ISBN::Driver>)
+
+=head1 DESCRIPTION
+
+Searches for book information from the (DE) Amazon online catalog.
+This module is a mere paste and translation of L<WWW::Scraper::ISBN::AmazonFR_Driver>.
+
+=head1 VERSION
+
+Version 0.22
+
+=head1 FUNCTIONS
+
+=head2 search
 
 =head1 AUTHOR
 
@@ -190,11 +205,22 @@ L<http://search.cpan.org/dist/WWW-Scraper-ISBN-AmazonDE_Driver>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2007 - 2010 Renee Baecker, all rights reserved.
+Copyright 2007 - 2011 Renee Baecker, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of Artistic License 2.0.
 
+=head1 AUTHOR
+
+Renee Baecker <module@renee-baecker.de>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2011 by Renee Baecker.
+
+This is free software, licensed under:
+
+  The Artistic License 2.0 (GPL Compatible)
+
 =cut
 
-1; # End of WWW::Scraper::ISBN::AmazonDE_Driver

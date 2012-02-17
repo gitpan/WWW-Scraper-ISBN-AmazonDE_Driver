@@ -19,4 +19,4 @@ requires:
   WWW::Scraper::ISBN: 0.24
   WWW::Scraper::ISBN::Driver: 0.17
   Web::Scraper: 0.13
-version: 0.22
+version: 0.23

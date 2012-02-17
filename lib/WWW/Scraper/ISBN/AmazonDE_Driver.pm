@@ -16,8 +16,7 @@ our $DEBUG = $ENV{ISBN_DRIVER_DEBUG};
 
 # ABSTRACT: Search driver for the (DE) Amazon online catalog.
 
-
-our $VERSION = '0.22';
+our $VERSION = '0.23';
 
 
 sub search {
@@ -105,7 +104,8 @@ sub search {
      @{ $data }{ qw/title author/ } = @tmp_info[0,-2];
 
      if ( $data->{author} =~ /\A\d+/ ) {
-         $data->{author} = $tmp_info[1];
+         my ($index) = grep{ $tmp_info[$_] eq $data->{author} } reverse ( 0 .. $#tmp_info );
+         $data->{author} = $tmp_info[$index-1];
      }
 
      #my @tmp_info = split /:/, $data->{content};
@@ -142,7 +142,7 @@ WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online c
 
 =head1 VERSION
 
-version 0.22
+version 0.23
 
 =head1 SYNOPSIS
 
@@ -152,10 +152,6 @@ See parent class documentation (L<WWW::Scraper::ISBN::Driver>)
 
 Searches for book information from the (DE) Amazon online catalog.
 This module is a mere paste and translation of L<WWW::Scraper::ISBN::AmazonFR_Driver>.
-
-=head1 VERSION
-
-Version 0.22
 
 =head1 FUNCTIONS
 

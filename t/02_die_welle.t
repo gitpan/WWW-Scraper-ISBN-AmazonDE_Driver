@@ -22,5 +22,5 @@ my $regex = join '|', @months;
 is( $book->{title}, 'Die Welle' );
 like( $book->{author}, qr/Morton Rhue,\s*Hans-Georg Noack/ );
 is( $book->{publisher}, 'Ravensburger Buchverlag' );
-like( $book->{pubdate}, qr/(?:$regex) (?:10|20)\d\d/ );
+like( $book->{pubdate}, qr/(?:$regex) (?:19|20)\d\d/ );
 

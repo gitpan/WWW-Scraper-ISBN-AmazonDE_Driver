@@ -16,7 +16,7 @@ our $DEBUG = $ENV{ISBN_DRIVER_DEBUG};
 
 # ABSTRACT: Search driver for the (DE) Amazon online catalog.
 
-our $VERSION = '0.24';
+our $VERSION = '0.25';
 
 
 sub search {
@@ -142,7 +142,7 @@ WWW::Scraper::ISBN::AmazonDE_Driver - Search driver for the (DE) Amazon online c
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 

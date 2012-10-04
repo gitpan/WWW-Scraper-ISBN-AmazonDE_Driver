@@ -27,7 +27,7 @@ my %WriteMakefileArgs = (
     "WWW::Scraper::ISBN::Driver" => "0.17",
     "Web::Scraper" => "0.13"
   },
-  "VERSION" => "0.24",
+  "VERSION" => "0.25",
   "test" => {
     "TESTS" => "t/*.t"
   }
